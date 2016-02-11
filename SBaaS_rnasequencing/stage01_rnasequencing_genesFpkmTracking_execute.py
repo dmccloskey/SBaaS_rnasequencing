@@ -1,0 +1,8 @@
+from copy import copy
+#sbaas
+from .stage01_rnasequencing_genesFpkmTracking_io import stage01_rnasequencing_genesFpkmTracking_io
+#sbaas models
+from .stage01_rnasequencing_genesFpkmTracking_postgresql_models import *
+
+class stage01_rnasequencing_genesFpkmTracking_execute(stage01_rnasequencing_genesFpkmTracking_io):
+    pass;

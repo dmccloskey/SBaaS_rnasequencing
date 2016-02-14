@@ -14,12 +14,12 @@ session = pg_orm.get_session();
 engine = pg_orm.get_engine();
 
 # your app...
-sys.path.append('C:/Users/dmccloskey-sbrg/Google Drive/SBaaS_rnasequencing')
-sys.path.append('C:/Users/dmccloskey-sbrg/Google Drive/SBaaS_statistics')
-sys.path.append('C:/Users/dmccloskey-sbrg/Documents/GitHub/sequencing_utilities')
-sys.path.append('C:/Users/dmccloskey-sbrg/Documents/GitHub/sequencing_analysis')
-sys.path.append('C:/Users/dmccloskey-sbrg/Documents/GitHub/io_utilities')
-sys.path.append('C:/Users/dmccloskey-sbrg/Documents/GitHub/calculate_utilities')
+sys.path.append(pg_settings.datadir_settings['github']+'/SBaaS_rnasequencing')
+sys.path.append(pg_settings.datadir_settings['github']+'/SBaaS_statistics')
+sys.path.append(pg_settings.datadir_settings['github']+'/sequencing_utilities')
+sys.path.append(pg_settings.datadir_settings['github']+'sequencing_analysis')
+sys.path.append(pg_settings.datadir_settings['github']+'/io_utilities')
+sys.path.append(pg_settings.datadir_settings['github']+'/calculate_utilities')
 
 from io_utilities.base_importData import base_importData
 from io_utilities.base_exportData import base_exportData

@@ -2,8 +2,8 @@ from SBaaS_base.postgresql_orm_base import *
 
 class data_stage01_rnasequencing_geneExpDiff(Base):
     
-    __tablename__ = 'data_stage01_rnasequencing_geneExpDif'
-    id = Column(Integer, Sequence('data_stage01_rnasequencing_geneExpDif_id_seq'), primary_key=True)
+    __tablename__ = 'data_stage01_rnasequencing_geneExpDiff'
+    id = Column(Integer, Sequence('data_stage01_rnasequencing_geneExpDiff_id_seq'), primary_key=True)
     #analysis_id = Column(String(500))
     experiment_id_1 = Column(String(50))
     experiment_id_2 = Column(String(50))

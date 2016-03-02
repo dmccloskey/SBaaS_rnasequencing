@@ -14,7 +14,7 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
     def initialize_supportedTables(self):
         '''Set the supported tables dict for 
         '''
-        tables_supported = {'data_stage01_rnasequencing_geneExpDif':data_stage01_rnasequencing_geneExpDif,
+        tables_supported = {'data_stage01_rnasequencing_geneExpDiff':data_stage01_rnasequencing_geneExpDiff,
                         };
         self.set_supportedTables(tables_supported);
     # query data from data_stage01_rnasequencing_geneExpDiff

@@ -1,3 +1,13 @@
+'''
+TODO:
+table for .fastq file locations
+table for bowtie parameters
+table for .bam/.sam files
+table for cufflink parameters
+table for cuffdiff parameters
+'''
+
+
 import sys
 sys.path.append('C:/Users/dmccloskey-sbrg/Google Drive/SBaaS_base')
 from SBaaS_base.postgresql_settings import postgresql_settings

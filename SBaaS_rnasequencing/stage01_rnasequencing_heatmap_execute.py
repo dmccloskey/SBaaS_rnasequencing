@@ -72,5 +72,5 @@ class stage01_rnasequencing_heatmap_execute(stage01_rnasequencing_heatmap_io,
         dendrogram_row_1['comment_']=None;
         dendrogram_row_O.append(dendrogram_row_1);
         self.add_rows_table('data_stage01_rnasequencing_heatmap',heatmap_O);
-        self.add_rows_table('data_stage01_rnasequencing',dendrogram_col_O);
-        self.add_rows_table('data_stage01_rnasequencing',dendrogram_row_O);
+        #self.add_rows_table('data_stage01_rnasequencing',dendrogram_col_O);
+        #self.add_rows_table('data_stage01_rnasequencing',dendrogram_row_O);

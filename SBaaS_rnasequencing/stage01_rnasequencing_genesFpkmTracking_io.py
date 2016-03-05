@@ -9,6 +9,8 @@ from SBaaS_base.sbaas_template_io import sbaas_template_io
 from io_utilities.base_importData import base_importData
 from io_utilities.base_exportData import base_exportData
 from sequencing_analysis.genes_fpkm_tracking import genes_fpkm_tracking
+from ddt_python.ddt_container_filterMenuAndChart2dAndTable import ddt_container_filterMenuAndChart2dAndTable
+from listDict.listDict import listDict
 
 class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkmTracking_query,
                                                  stage01_rnasequencing_analysis_query,
@@ -29,7 +31,6 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
         data.clear_data();
     def export_dataStage01RNASequencingGenesFpkmTracking_js(self,analysis_id_I,data_dir_I='tmp'):
         '''Export data for a box and whiskers plot'''
-
         # get the analysis information
         experiment_ids,sample_names = [],[];
         experiment_ids,sample_names = self.get_experimentIDAndSampleName_analysisID_dataStage01RNASequencingAnalysis(analysis_id_I);
@@ -76,17 +77,103 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
         tile2datamap_O = {"filtermenu1":[0],"tile2":[0],"tile3":[0]};
         # dump the data to a json file
-        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
-        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
-        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        # dump the data to a json file
+        ddtutilities = ddt_container(parameters_I = parametersobject_O,data_I = dataobject_O,tile2datamap_I = tile2datamap_O,filtermenu_I = None);
         if data_dir_I=='tmp':
             filename_str = self.settings['visualization_data'] + '/tmp/ddt_data.js'
-        elif data_dir_I=='project':
-            filename_str = self.settings['visualization_data'] + '/project/' + analysis_id_I + '_data_stage01_rnasequencing_heatmap' + '.js'
         elif data_dir_I=='data_json':
-            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            data_json_O = ddtutilities.get_allObjects_js();
             return data_json_O;
         with open(filename_str,'w') as file:
-            file.write(data_str);
-            file.write(parameters_str);
-            file.write(tile2datamap_str);
+            file.write(ddtutilities.get_allObjects());
+    def export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js(self,analysis_id_I,data_dir_I='tmp'):
+        '''Export data for a pairwise scatter plot
+        INPUT:
+        analysis_id
+        data_dir_I
+        OUTPUT:
+        '''
+        # get the analysis information
+        experiment_ids,sample_names = [],[];
+        experiment_ids,sample_names = self.get_experimentIDAndSampleName_analysisID_dataStage01RNASequencingAnalysis(analysis_id_I);
+        data_O = [];
+        for sample_name_cnt,sample_name in enumerate(sample_names):
+            # query fpkm data:
+            fpkms = [];
+            fpkms = self.get_rows_experimentIDAndSampleName_dataStage01RNASequencingGenesFpkmTracking(experiment_ids[sample_name_cnt],sample_name);
+            data_O.extend(fpkms);
+        # reorganize the data
+        listdict = listDict(data_O);
+        data_O,columnValueHeader_O = listdict.convert_listDict2ColumnGroupListDict(
+                    value_labels_I = ['FPKM','FPKM_conf_lo','FPKM_conf_hi'],
+                    column_label_I = 'sample_name',
+                    feature_labels_I = ['experiment_id','gene_id','gene_short_name'],
+                    na_str_I=0.0,
+                    columnValueConnector_str_I='_-_',
+                    );
+        # make the tile object
+        #data1 = filtermenu/table
+        data1_keymap_table = {
+            'xdata':'svd_method',
+            'ydata':'singular_value_index',
+            'zdata':'d_vector',
+            'rowslabel':'svd_method',
+            'columnslabel':'singular_value_index',
+            };     
+        #data2 = svg
+        #if single plot, data2 = filter menu, data2, and table
+        data1_keys = ['experiment_id','gene_id','gene_short_name'
+                    ];
+        data1_nestkeys = ['gene_short_name'];
+        data1_keymap_svg = [];
+        svgtype = [];
+        svgtile2datamap = [];
+        for cnt1,column1 in enumerate(columnValueHeader_O):
+            for cnt2,column2 in enumerate(columnValueHeader_O[cnt1:]):
+                keymap = {
+                'xdata':column1,
+                'ydata':column2,
+                'serieslabel':'experiment_id',
+                'featureslabel':'gene_id',
+                'tooltipdata':'gene_id',
+                };
+                data1_keymap_svg.append([keymap]);
+                svgtype.append('pcaplot2d_scores_01');
+                svgtile2datamap.append([0]);
+
+        nsvgtable = ddt_container_filterMenuAndChart2dAndTable();
+        nsvgtable.make_filterMenuAndChart2dAndTable(
+                data_filtermenu=data_O,
+                data_filtermenu_keys=data1_keys,
+                data_filtermenu_nestkeys=data1_nestkeys,
+                data_filtermenu_keymap=data1_keymap_table,
+                data_svg_keys=data1_keys,
+                data_svg_nestkeys=data1_nestkeys,
+                data_svg_keymap=[data1_keymap_svg1,data1_keymap_svg2,data1_keymap_svg3],
+                data_table_keys=data1_keys,
+                data_table_nestkeys=data1_nestkeys,
+                data_table_keymap=data1_keymap_table,
+                data_svg=None,
+                data_table=None,
+                svgtype=svgtype,
+                tabletype='responsivetable_01',
+                svgx1axislabel='',
+                svgy1axislabel='',
+                tablekeymap = [data1_keymap_table],
+                svgkeymap = data1_keymap_svg,
+                formtile2datamap=[0],
+                tabletile2datamap=[0],
+                svgtile2datamap=svgtile2datamap,
+                svgfilters=None,
+                svgtileheader='Pair-wise scatter plot',
+                tablefilters=None,
+                tableheaders=None
+                );
+
+        if data_dir_I=='tmp':
+            filename_str = self.settings['visualization_data'] + '/tmp/ddt_data.js'
+        elif data_dir_I=='data_json':
+            data_json_O = nsvgtable.get_allObjects_js();
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(nsvgtable.get_allObjects());

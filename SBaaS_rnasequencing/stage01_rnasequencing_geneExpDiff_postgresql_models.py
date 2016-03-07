@@ -29,8 +29,30 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
         UniqueConstraint('experiment_id_1','experiment_id_2','sample_name_abbreviation_1','sample_name_abbreviation_2','gene_id'
                          ),
             )
+    def __init__(self, 
+                row_dict_I,
+                ):
+        self.experiment_id_1=row_dict_I['experiment_id_1'];
+        self.experiment_id_2=row_dict_I['experiment_id_2'];
+        self.sample_name_abbreviation_1=row_dict_I['sample_name_abbreviation_1'];
+        self.sample_name_abbreviation_2=row_dict_I['sample_name_abbreviation_2'];
+        self.test_id=row_dict_I['test_id'];
+        self.gene_id=row_dict_I['gene_id'];
+        self.gene=row_dict_I['gene'];
+        self.sample_1=row_dict_I['sample_1'];
+        self.sample_2=row_dict_I['sample_2'];
+        self.status=row_dict_I['status'];
+        self.value_1=row_dict_I['value_1'];
+        self.value_2=row_dict_I['value_2'];
+        self.fold_change_log2=row_dict_I['fold_change_log2'];
+        self.test_stat=row_dict_I['test_stat'];
+        self.p_value=row_dict_I['p_value'];
+        self.q_value=row_dict_I['q_value'];
+        self.significant=row_dict_I['significant'];
+        self.used_=row_dict_I['used_'];
+        self.comment_=row_dict_I['comment_'];
 
-    def __init__(self,
+    def __set__row__(self,
         #analysis_id_I,
         experiment_id_1_I,
         experiment_id_2_I,

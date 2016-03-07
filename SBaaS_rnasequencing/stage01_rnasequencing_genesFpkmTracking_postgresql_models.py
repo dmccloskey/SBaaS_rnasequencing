@@ -26,8 +26,28 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
         UniqueConstraint('experiment_id','sample_name','gene_id'
                          ),
             )
+    def __init__(self, 
+                row_dict_I,
+                ):
+        self.comment_=row_dict_I['comment_'];
+        self.used_=row_dict_I['used_'];
+        self.FPKM_status=row_dict_I['FPKM_status'];
+        self.FPKM_conf_hi=row_dict_I['FPKM_conf_hi'];
+        self.FPKM_conf_lo=row_dict_I['FPKM_conf_lo'];
+        self.FPKM=row_dict_I['FPKM'];
+        self.coverage=row_dict_I['coverage'];
+        self.length=row_dict_I['length'];
+        self.locus=row_dict_I['locus'];
+        self.tss_id=row_dict_I['tss_id'];
+        self.gene_short_name=row_dict_I['gene_short_name'];
+        self.gene_id=row_dict_I['gene_id'];
+        self.nearest_ref_id=row_dict_I['nearest_ref_id'];
+        self.class_code=row_dict_I['class_code'];
+        self.tracking_id=row_dict_I['tracking_id'];
+        self.sample_name=row_dict_I['sample_name'];
+        self.experiment_id=row_dict_I['experiment_id'];
 
-    def __init__(self,
+    def __set__row__(self,
         experiment_id_I,
         sample_name_I,
         tracking_id_I,

@@ -105,11 +105,12 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
         # reorganize the data
         listdict = listDict(data_O);
         data_O,columnValueHeader_O = listdict.convert_listDict2ColumnGroupListDict(
-                    value_labels_I = ['FPKM','FPKM_conf_lo','FPKM_conf_hi'],
-                    column_label_I = 'sample_name',
-                    feature_labels_I = ['experiment_id','gene_id','gene_short_name'],
+                    #value_labels_I = ['FPKM','FPKM_conf_lo','FPKM_conf_hi'],
+                    value_labels_I = ['FPKM',],
+                    column_labels_I = ['experiment_id','sample_name'],
+                    feature_labels_I = ['gene_id','gene_short_name'],
                     na_str_I=0.0,
-                    columnValueConnector_str_I='_-_',
+                    columnValueConnector_str_I='_',
                     );
         # make the tile object
         #data1 = filtermenu/table
@@ -122,22 +123,24 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
             };     
         #data2 = svg
         #if single plot, data2 = filter menu, data2, and table
-        data1_keys = ['experiment_id','gene_id','gene_short_name'
+        data1_keys = ['gene_id','gene_short_name'
                     ];
         data1_nestkeys = ['gene_short_name'];
         data1_keymap_svg = [];
         svgtype = [];
         svgtile2datamap = [];
+        data_svg_keymap = [];
         for cnt1,column1 in enumerate(columnValueHeader_O):
-            for cnt2,column2 in enumerate(columnValueHeader_O[cnt1:]):
+            for cnt2,column2 in enumerate(columnValueHeader_O[cnt1+1:]):
                 keymap = {
                 'xdata':column1,
                 'ydata':column2,
-                'serieslabel':'experiment_id',
-                'featureslabel':'gene_id',
-                'tooltipdata':'gene_id',
+                'serieslabel':'',
+                'featureslabel':'gene_short_name',
+                'tooltipdata':'gene_short_name',
                 };
                 data1_keymap_svg.append([keymap]);
+                data_svg_keymap.append(keymap);
                 svgtype.append('pcaplot2d_scores_01');
                 svgtile2datamap.append([0]);
 
@@ -149,7 +152,7 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
                 data_filtermenu_keymap=data1_keymap_table,
                 data_svg_keys=data1_keys,
                 data_svg_nestkeys=data1_nestkeys,
-                data_svg_keymap=[data1_keymap_svg1,data1_keymap_svg2,data1_keymap_svg3],
+                data_svg_keymap=data_svg_keymap,
                 data_table_keys=data1_keys,
                 data_table_nestkeys=data1_nestkeys,
                 data_table_keymap=data1_keymap_table,

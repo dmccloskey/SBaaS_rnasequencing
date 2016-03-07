@@ -15,8 +15,19 @@ class data_stage01_rnasequencing_analysis(Base):
     __table_args__ = (
             UniqueConstraint('experiment_id','sample_name_abbreviation','sample_name','time_point','analysis_type','analysis_id'),
             )
+    def __init__(self, 
+                row_dict_I,
+                ):
+        self.analysis_id=row_dict_I['analysis_id'];
+        self.experiment_id=row_dict_I['experiment_id'];
+        self.sample_name_abbreviation=row_dict_I['sample_name_abbreviation'];
+        self.sample_name=row_dict_I['sample_name'];
+        self.time_point=row_dict_I['time_point'];
+        self.analysis_type=row_dict_I['analysis_type'];
+        self.used_=row_dict_I['used_'];
+        self.comment_=row_dict_I['comment_'];
 
-    def __init__(self,analysis_id_I,
+    def __set__row__(self,analysis_id_I,
                  experiment_id_I,
             sample_name_abbreviation_I,
             sample_name_I,

@@ -54,6 +54,10 @@
     <Compile Include="stage01_rnasequencing_analysis_postgresql_models.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="stage01_rnasequencing_softwareParameters_execute.py" />
+    <Compile Include="stage01_rnasequencing_softwareParameters_io.py" />
+    <Compile Include="stage01_rnasequencing_softwareParameters_postgresql_models.py" />
+    <Compile Include="stage01_rnasequencing_softwareParameters_query.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <PropertyGroup>

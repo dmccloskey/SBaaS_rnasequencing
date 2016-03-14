@@ -10,7 +10,9 @@ from io_utilities.base_importData import base_importData
 from io_utilities.base_exportData import base_exportData
 from sequencing_analysis.genes_fpkm_tracking import genes_fpkm_tracking
 from ddt_python.ddt_container_filterMenuAndChart2dAndTable import ddt_container_filterMenuAndChart2dAndTable
+from ddt_python.ddt_container import ddt_container
 from listDict.listDict import listDict
+from math import log2
 
 class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkmTracking_query,
                                                  stage01_rnasequencing_analysis_query,
@@ -86,11 +88,12 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
             return data_json_O;
         with open(filename_str,'w') as file:
             file.write(ddtutilities.get_allObjects());
-    def export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js(self,analysis_id_I,data_dir_I='tmp'):
+    def export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js(self,analysis_id_I,log2normalization_I=True,data_dir_I='tmp'):
         '''Export data for a pairwise scatter plot
         INPUT:
-        analysis_id
-        data_dir_I
+        analysis_id = String, analysis_id
+        log2normalization_I = Boolean, apply a log2 normalization the FPKM values (default: True)
+        data_dir_I = string, data directory
         OUTPUT:
         '''
         # get the analysis information
@@ -101,6 +104,10 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
             # query fpkm data:
             fpkms = [];
             fpkms = self.get_rows_experimentIDAndSampleName_dataStage01RNASequencingGenesFpkmTracking(experiment_ids[sample_name_cnt],sample_name);
+            if log2normalization_I:
+                for f in fpkms:
+                    if f['FPKM'] == 0.0: f['FPKM'] = 0.0;
+                    else: f['FPKM'] = log2(f['FPKM']);
             data_O.extend(fpkms);
         # reorganize the data
         listdict = listDict(data_O);

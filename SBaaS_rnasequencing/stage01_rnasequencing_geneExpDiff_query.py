@@ -59,30 +59,33 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
         if data_I:
             for d in data_I:
                 try:
+                    if not 'fold_change_log2' in d and 'log2(fold_change)' in d:
+                        d['fold_change_log2'] = d['log2(fold_change)'];
                     if not 'used_' in d:
                         d['used_'] = True;
                     if not 'comment_' in d:
                         d['comment_'] = None;
-                    data_add = data_stage01_rnasequencing_geneExpDiff(
-                            d['experiment_id_1'],
-                            d['experiment_id_2'],
-                            d['sample_name_abbreviation_1'],
-                            d['sample_name_abbreviation_2'],
-                            d['test_id'],
-                            d['gene_id'],
-                            d['gene'],
-                            d['sample_1'],
-                            d['sample_2'],
-                            d['status'],
-                            d['value_1'],
-                            d['value_2'],
-                            d['log2(fold_change)'],
-                            d['test_stat'],
-                            d['p_value'],
-                            d['q_value'],
-                            d['significant'],
-                            d['used_'],
-                            d['comment_']);
+                    data_add = data_stage01_rnasequencing_geneExpDiff(d
+                            #d['experiment_id_1'],
+                            #d['experiment_id_2'],
+                            #d['sample_name_abbreviation_1'],
+                            #d['sample_name_abbreviation_2'],
+                            #d['test_id'],
+                            #d['gene_id'],
+                            #d['gene'],
+                            #d['sample_1'],
+                            #d['sample_2'],
+                            #d['status'],
+                            #d['value_1'],
+                            #d['value_2'],
+                            #d['log2(fold_change)'],
+                            #d['test_stat'],
+                            #d['p_value'],
+                            #d['q_value'],
+                            #d['significant'],
+                            #d['used_'],
+                            #d['comment_']
+                            );
                     self.session.add(data_add);
                 except SQLAlchemyError as e:
                     print(e);

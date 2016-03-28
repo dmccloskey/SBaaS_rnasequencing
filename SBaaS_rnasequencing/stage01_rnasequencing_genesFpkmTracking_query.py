@@ -59,23 +59,25 @@ class stage01_rnasequencing_genesFpkmTracking_query(sbaas_template_query):
                         d['used_'] = True;
                     if not 'comment_' in d:
                         d['comment_'] = None;
-                    data_add = data_stage01_rnasequencing_genesFpkmTracking(d['experiment_id'],
-                            d['sample_name'],
-                            d['tracking_id'],
-                            d['class_code'],
-                            d['nearest_ref_id'],
-                            d['gene_id'],
-                            d['gene_short_name'],
-                            d['tss_id'],
-                            d['locus'],
-                            d['length'],
-                            d['coverage'],
-                            d['FPKM'],
-                            d['FPKM_conf_lo'],
-                            d['FPKM_conf_hi'],
-                            d['FPKM_status'],
-                            d['used_'],
-                            d['comment_']);
+                    data_add = data_stage01_rnasequencing_genesFpkmTracking(d
+                            #d['experiment_id'],
+                            #d['sample_name'],
+                            #d['tracking_id'],
+                            #d['class_code'],
+                            #d['nearest_ref_id'],
+                            #d['gene_id'],
+                            #d['gene_short_name'],
+                            #d['tss_id'],
+                            #d['locus'],
+                            #d['length'],
+                            #d['coverage'],
+                            #d['FPKM'],
+                            #d['FPKM_conf_lo'],
+                            #d['FPKM_conf_hi'],
+                            #d['FPKM_status'],
+                            #d['used_'],
+                            #d['comment_']
+                            );
                     self.session.add(data_add);
                 except SQLAlchemyError as e:
                     print(e);

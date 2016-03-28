@@ -172,14 +172,16 @@ class stage01_rnasequencing_analysis_query(sbaas_template_query):
         if data_I:
             for d in data_I:
                 try:
-                    data_add = data_stage01_rnasequencing_analysis(d['analysis_id'],
-                            d['experiment_id'],
-                            d['sample_name_abbreviation'],
-                            d['sample_name'],
-                            d['time_point'],
-                            d['analysis_type'],
-                            d['used_'],
-                            d['comment_']);
+                    data_add = data_stage01_rnasequencing_analysis(d
+                            #d['analysis_id'],
+                            #d['experiment_id'],
+                            #d['sample_name_abbreviation'],
+                            #d['sample_name'],
+                            #d['time_point'],
+                            #d['analysis_type'],
+                            #d['used_'],
+                            #d['comment_']
+                            );
                     self.session.add(data_add);
                 except SQLAlchemyError as e:
                     print(e);

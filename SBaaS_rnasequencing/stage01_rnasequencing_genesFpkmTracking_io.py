@@ -59,7 +59,7 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
             'tileclass':"panel panel-default",'rowclass':"row",'colclass':"col-sm-4"};
         formparameters_O = {'htmlid':'filtermenuform1',"htmltype":'form_01',"formsubmitbuttonidtext":{'id':'submit1','text':'submit'},"formresetbuttonidtext":{'id':'reset1','text':'reset'},"formupdatebuttonidtext":{'id':'update1','text':'update'}};
         formtileparameters_O.update(formparameters_O);
-        svgparameters_O = {"svgtype":'boxandwhiskersplot2d_01',"svgkeymap":[data1_keymap],
+        svgparameters_O = {"svgtype":'boxandwhiskersplot2d_02',"svgkeymap":[data1_keymap],
                             'svgid':'svg1',
                             "svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
                             "svgwidth":500,"svgheight":350,
@@ -78,7 +78,6 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
         tabletileparameters_O.update(tableparameters_O);
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
         tile2datamap_O = {"filtermenu1":[0],"tile2":[0],"tile3":[0]};
-        # dump the data to a json file
         # dump the data to a json file
         ddtutilities = ddt_container(parameters_I = parametersobject_O,data_I = dataobject_O,tile2datamap_I = tile2datamap_O,filtermenu_I = None);
         if data_dir_I=='tmp':

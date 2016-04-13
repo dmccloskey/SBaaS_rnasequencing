@@ -134,3 +134,15 @@ class stage01_rnasequencing_genesFpkmTracking_query(sbaas_template_query):
             data_stage01_rnasequencing_genesFpkmTracking.__table__.create(self.engine,True);
         except SQLAlchemyError as e:
             print(e);
+    def get_rows_experimentIDAndSampleNameAndGeneShortName_dataStage01RNASequencingGenesFpkmTracking(self,experiment_id_I,sample_name_I,gene_short_name_I):
+        '''Query rows by experiment_id and sample_name and gene_name_short'''
+        try:
+            data = self.session.query(data_stage01_rnasequencing_genesFpkmTracking).filter(
+                    data_stage01_rnasequencing_genesFpkmTracking.experiment_id.like(experiment_id_I),
+                    data_stage01_rnasequencing_genesFpkmTracking.sample_name.like(sample_name_I),
+                    data_stage01_rnasequencing_genesFpkmTracking.gene_short_name.like(gene_short_name_I),
+                    data_stage01_rnasequencing_genesFpkmTracking.used_).all();
+            data_O = [d.__repr__dict__() for d in data];
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);

@@ -15,6 +15,7 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
         '''Set the supported tables dict for 
         '''
         tables_supported = {'data_stage01_rnasequencing_geneExpDiff':data_stage01_rnasequencing_geneExpDiff,
+                            'data_stage01_rnasequencing_geneExpDiffFpkmTracking':data_stage01_rnasequencing_geneExpDiffFpkmTracking,
                         };
         self.set_supportedTables(tables_supported);
     # query data from data_stage01_rnasequencing_geneExpDiff
@@ -90,7 +91,6 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
-
     def update_dataStage01RNASequencingGeneExpDiff(self,data_I):
         '''update rows of data_stage01_rnasequencing_lineage'''
         if data_I:
@@ -121,24 +121,15 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
-    def reset_dataStage01_rnasequencing_geneExpDiff(self,analysis_id_I = None):
+
+    # query data from data_stage01_rnasequencing_geneExpDiffFpkmTracking
+    def get_rows_analysisID_dataStage01RNASequencingGeneExpDiffFpkmTracking(self,analysis_id_I):
+        '''Query rows by analysis_id'''
         try:
-            if analysis_id_I:
-                return;
-                #TODO: query the analysis information
-                reset = self.session.query(data_stage01_rnasequencing_geneExpDiff).filter(data_stage01_rnasequencing_geneExpDiff.analysis_id.like(analysis_id_I)).delete(synchronize_session=False);
-            else:
-                reset = self.session.query(data_stage01_rnasequencing_geneExpDiff).delete(synchronize_session=False);
-            self.session.commit();
-        except SQLAlchemyError as e:
-            print(e);
-    def drop_dataStage01_rnasequencing_geneExpDiff(self):
-        try:
-            data_stage01_rnasequencing_geneExpDiff.__table__.drop(self.engine,True);
-        except SQLAlchemyError as e:
-            print(e);
-    def initialize_dataStage01_rnasequencing_geneExpDiff(self):
-        try:
-            data_stage01_rnasequencing_geneExpDiff.__table__.create(self.engine,True);
+            data = self.session.query(data_stage01_rnasequencing_geneExpDiffFpkmTracking).filter(
+                    data_stage01_rnasequencing_geneExpDiffFpkmTracking.analysis_id.like(analysis_id_I),
+                    data_stage01_rnasequencing_geneExpDiffFpkmTracking.used_).all();
+            data_O = [d.__repr__dict__() for d in data];
+            return data_O;
         except SQLAlchemyError as e:
             print(e);

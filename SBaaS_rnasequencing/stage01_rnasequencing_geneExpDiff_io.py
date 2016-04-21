@@ -22,6 +22,13 @@ class stage01_rnasequencing_geneExpDiff_io(stage01_rnasequencing_geneExpDiff_que
                         sample_name_abbreviation_1_I = sample_name_abbreviation_1,sample_name_abbreviation_2_I = sample_name_abbreviation_2);
         self.add_dataStage01RNASequencingGeneExpDiff(geneexpdiff.geneExpDiff);
 
+    def import_dataStage01RNASequencingGeneExpDiffFpkmTracking_add(self, filename,analysis_id,experiment_id_1,experiment_id_2,sample_name_abbreviation_1,sample_name_abbreviation_2):
+        '''table adds'''
+        geneexpdiff = gene_exp_diff();
+        geneexpdiff.import_genesFpkmTracking(filename_I=filename,analysis_id_I=analysis_id, experiment_id_1_I = experiment_id_1,experiment_id_2_I = experiment_id_2,
+                        sample_name_abbreviation_1_I = sample_name_abbreviation_1,sample_name_abbreviation_2_I = sample_name_abbreviation_2);
+        self.add_rows_table('data_stage01_rnasequencing_geneExpDiffFpkmTracking',geneexpdiff.genesFpkmTracking);
+
     def import_dataStage01RNASequencingGeneExpDiff_update(self, filename):
         '''table adds'''
         data = base_importData();

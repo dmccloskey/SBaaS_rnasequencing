@@ -42,4 +42,12 @@ fpkm01 = stage01_rnasequencing_genesFpkmTracking_execute(session,engine,pg_setti
 fpkm01.initialize_supportedTables();
 fpkm01.initialize_dataStage01_rnasequencing_genesFpkmTracking();
 
-fpkm01.export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js('ALEsKOs01_0_evo04_11_evo04Evo01');
+#fpkm01.export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js('ALEsKOs01_0_evo04_11_evo04Evo01');
+
+#make the table
+from SBaaS_rnasequencing.stage01_rnasequencing_geneExpDiff_execute import stage01_rnasequencing_geneExpDiff_execute
+ged01 = stage01_rnasequencing_geneExpDiff_execute(session,engine,pg_settings.datadir_settings);
+ged01.initialize_supportedTables();
+ged01.initialize_tables();
+
+ged01.export_dataStage01RNASequencingGeneExpDiff_count_js();

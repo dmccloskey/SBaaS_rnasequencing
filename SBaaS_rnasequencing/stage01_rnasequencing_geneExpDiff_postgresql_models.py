@@ -22,11 +22,13 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
     p_value = Column(Float); # uncorrected p-value
     q_value = Column(Float); # FDR corrected p-value
     significant = Column(String(100)) #Yes/No
+    #library_norm_method = Column(String(100))
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
     __table_args__ = (
-        UniqueConstraint('experiment_id_1','experiment_id_2','sample_name_abbreviation_1','sample_name_abbreviation_2','gene_id'
+        UniqueConstraint('experiment_id_1','experiment_id_2','sample_name_abbreviation_1','sample_name_abbreviation_2','gene_id',
+                         #'library_norm_method'
                          ),
             )
     def __init__(self, 
@@ -49,6 +51,7 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
         self.p_value=row_dict_I['p_value'];
         self.q_value=row_dict_I['q_value'];
         self.significant=row_dict_I['significant'];
+        #self.library_norm_method=row_dict_I['library_norm_method'];
         self.used_=row_dict_I['used_'];
         self.comment_=row_dict_I['comment_'];
 
@@ -71,6 +74,7 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
         p_value_I,
         q_value_I,
         significant_I,
+        #library_norm_method_I,
         used__I,
         comment__I):
         #self.analysis_id=analysis_id_I
@@ -91,6 +95,7 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
         self.p_value=p_value_I
         self.q_value=q_value_I
         self.significant=significant_I
+        #self.library_norm_method=library_norm_method_I
         self.used_=used__I
         self.comment_=comment__I
 
@@ -114,6 +119,7 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
                 'p_value':self.p_value,
                 'q_value':self.q_value,
                 'significant':self.significant,
+                #'library_norm_method':self.library_norm_method,
                 'used_':self.used_,
                 'comment_':self.comment_};
     
@@ -140,11 +146,13 @@ class data_stage01_rnasequencing_geneExpDiffFpkmTracking(Base):
     FPKM_conf_lo = Column(Float);
     FPKM_conf_hi = Column(Float);
     FPKM_status = Column(String(100))
+    #library_norm_method = Column(String(100))
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
     __table_args__ = (
-        UniqueConstraint('experiment_id','sample_name_abbreviation','gene_id','analysis_id'
+        UniqueConstraint('experiment_id','sample_name_abbreviation','gene_id','analysis_id',
+                         #'library_norm_method'
                          ),
             )
     def __init__(self, 
@@ -168,6 +176,7 @@ class data_stage01_rnasequencing_geneExpDiffFpkmTracking(Base):
         self.tracking_id=row_dict_I['tracking_id'];
         self.sample_name_abbreviation=row_dict_I['sample_name_abbreviation'];
         self.experiment_id=row_dict_I['experiment_id'];
+        #self.library_norm_method=row_dict_I['library_norm_method'];
 
     def __set__row__(self,analysis_id_I,
         experiment_id_I,
@@ -185,6 +194,7 @@ class data_stage01_rnasequencing_geneExpDiffFpkmTracking(Base):
         FPKM_conf_lo_I,
         FPKM_conf_hi_I,
         FPKM_status_I,
+        #library_norm_method_I,
         used__I,
         comment__I):
         self.analysis_id=analysis_id_I
@@ -203,6 +213,7 @@ class data_stage01_rnasequencing_geneExpDiffFpkmTracking(Base):
         self.FPKM_conf_lo=FPKM_conf_lo_I
         self.FPKM_conf_hi=FPKM_conf_hi_I
         self.FPKM_status=FPKM_status_I
+        #self.library_norm_method=library_norm_method_I
         self.used_=used__I
         self.comment_=comment__I
 
@@ -224,6 +235,7 @@ class data_stage01_rnasequencing_geneExpDiffFpkmTracking(Base):
                 'FPKM_conf_lo':self.FPKM_conf_lo,
                 'FPKM_conf_hi':self.FPKM_conf_hi,
                 'FPKM_status':self.FPKM_status,
+                #'library_norm_method':self.library_norm_method,
                 'used_':self.used_,
                 'comment_':self.comment_};
     

@@ -10,6 +10,9 @@ from SBaaS_base.sbaas_template_io import sbaas_template_io
 from io_utilities.base_importData import base_importData
 from io_utilities.base_exportData import base_exportData
 from sequencing_analysis.gene_exp_diff import gene_exp_diff
+from ddt_python.ddt_container import ddt_container
+from ddt_python.ddt_container_filterMenuAndChart2dAndTable import ddt_container_filterMenuAndChart2dAndTable
+from listDict.listDict import listDict
 
 class stage01_rnasequencing_geneExpDiff_io(stage01_rnasequencing_geneExpDiff_query,
                                            stage01_rnasequencing_analysis_query,
@@ -94,17 +97,139 @@ class stage01_rnasequencing_geneExpDiff_io(stage01_rnasequencing_geneExpDiff_que
         parametersobject_O = [formtileparameters_O,svgtileparameters_O,tabletileparameters_O];
         tile2datamap_O = {"filtermenu1":[0],"tile2":[0],"tile3":[0]};
         # dump the data to a json file
-        data_str = 'var ' + 'data' + ' = ' + json.dumps(dataobject_O) + ';';
-        parameters_str = 'var ' + 'parameters' + ' = ' + json.dumps(parametersobject_O) + ';';
-        tile2datamap_str = 'var ' + 'tile2datamap' + ' = ' + json.dumps(tile2datamap_O) + ';';
+        ddtutilities = ddt_container(parameters_I = parametersobject_O,data_I = dataobject_O,tile2datamap_I = tile2datamap_O,filtermenu_I = None);
         if data_dir_I=='tmp':
             filename_str = self.settings['visualization_data'] + '/tmp/ddt_data.js'
-        elif data_dir_I=='project':
-            filename_str = self.settings['visualization_data'] + '/project/' + analysis_id_I + '_data_stage01_rnasequencing_heatmap' + '.js'
         elif data_dir_I=='data_json':
-            data_json_O = data_str + '\n' + parameters_str + '\n' + tile2datamap_str;
+            data_json_O = ddtutilities.get_allObjects_js();
             return data_json_O;
         with open(filename_str,'w') as file:
-            file.write(data_str);
-            file.write(parameters_str);
-            file.write(tile2datamap_str);
+            file.write(ddtutilities.get_allObjects());
+    def export_dataStage01RNASequencingGeneExpDiff_count_js(self,
+                query_I={'where':[
+                    {"table_name":'data_stage01_rnasequencing_geneExpDiff',
+                    'column_name':'experiment_id_1',
+                    'value':'ALEsKOs01',
+                    'operator':'LIKE',
+                    'connector':'AND'
+                        },
+                    ],
+                },
+                data_dir_I='tmp'):
+        '''Export data for a count of differentially expressed genes
+        '''
+        
+        # get the analysis information
+        query = {}
+        tables = ['data_stage01_rnasequencing_geneExpDiff'];
+        query['select'] = [
+            {"table_name":tables[0],
+             "column_name":'experiment_id_1',
+             },{"table_name":tables[0],
+             "column_name":'experiment_id_2',
+             },{"table_name":tables[0],
+             "column_name":'sample_name_abbreviation_1',
+             },{"table_name":tables[0],
+             "column_name":'sample_name_abbreviation_2',
+             },
+            ];
+        query['group_by'] = [
+            {"table_name":tables[0],
+             "column_name":'experiment_id_1',
+             },{"table_name":tables[0],
+             "column_name":'experiment_id_2',
+             },{"table_name":tables[0],
+             "column_name":'sample_name_abbreviation_1',
+             },{"table_name":tables[0],
+             "column_name":'sample_name_abbreviation_2',
+             },
+            ];
+        query['order_by'] = [
+            {"table_name":tables[0],
+             "column_name":'experiment_id_1',
+             "order":'ASC',
+             },{"table_name":tables[0],
+             "column_name":'experiment_id_2',
+             "order":'ASC',
+             },{"table_name":tables[0],
+             "column_name":'sample_name_abbreviation_1',
+             "order":'ASC',
+             },{"table_name":tables[0],
+             "column_name":'sample_name_abbreviation_2',
+             "order":'ASC',
+             },
+            ];
+        query['where'] = [
+            {"table_name":tables[0],
+            'column_name':'significant',
+            'value':'yes',
+            'operator':'LIKE',
+            'connector':'AND'
+                },
+            ];
+
+        #additional query blocks
+        for k,v in query_I.items():
+            if not k in query.keys():
+                query[k] = [];
+            for r in v:
+                query[k].append(r);
+
+        data_O = [];
+        data_O = self.getAggregateFunction_rows_dataStage01RNASequencingGeneExpDiff(
+                column_name_I = 'gene',
+                aggregate_function_I='count',
+                aggregate_label_I='count_1',
+                query_I=query,
+                output_O='listDict',
+                dictColumn_I=None);
+        # add in new column
+        for d in data_O:
+            d['condition'] = ('%s_%s'%(d['sample_name_abbreviation_1'],d['sample_name_abbreviation_2']))
+        # make the data parameters
+        data1_keys = list(data_O[0].keys());
+        data1_nestkeys = ['sample_name_abbreviation_1'];
+        data1_keymap = {'ydata':'count_1',
+                        'xdata':'condition',
+                        'serieslabel':'sample_name_abbreviation_2',
+                        'featureslabel':'condition',
+                        'tooltiplabel':'condition'};
+        # make the data object
+        
+
+        nsvgtable = ddt_container_filterMenuAndChart2dAndTable();
+        nsvgtable.make_filterMenuAndChart2dAndTable(
+                data_filtermenu=data_O,
+                data_filtermenu_keys=data1_keys,
+                data_filtermenu_nestkeys=data1_nestkeys,
+                data_filtermenu_keymap=data1_keymap,
+                data_svg_keys=None,
+                data_svg_nestkeys=None,
+                data_svg_keymap=None,
+                data_table_keys=None,
+                data_table_nestkeys=None,
+                data_table_keymap=None,
+                data_svg=None,
+                data_table=None,
+                svgtype='verticalbarschart2d_01',
+                tabletype='responsivetable_01',
+                svgx1axislabel='Condition',
+                svgy1axislabel='Count',
+                tablekeymap = [data1_keymap],
+                svgkeymap = [data1_keymap],
+                formtile2datamap=[0],
+                tabletile2datamap=[0],
+                svgtile2datamap=[0],
+                svgfilters=None,
+                svgtileheader='Significant DE count',
+                tablefilters=None,
+                tableheaders=None
+                );
+
+        if data_dir_I=='tmp':
+            filename_str = self.settings['visualization_data'] + '/tmp/ddt_data.js'
+        elif data_dir_I=='data_json':
+            data_json_O = nsvgtable.get_allObjects_js();
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(nsvgtable.get_allObjects());

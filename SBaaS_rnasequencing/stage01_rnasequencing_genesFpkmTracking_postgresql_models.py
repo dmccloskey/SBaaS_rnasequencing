@@ -19,11 +19,13 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
     FPKM_conf_lo = Column(Float);
     FPKM_conf_hi = Column(Float);
     FPKM_status = Column(String(100))
+    #library_norm_method = Column(String(100))
     used_ = Column(Boolean);
     comment_ = Column(Text);
 
     __table_args__ = (
-        UniqueConstraint('experiment_id','sample_name','gene_id'
+        UniqueConstraint('experiment_id','sample_name','gene_id',
+                         'library_norm_method'
                          ),
             )
     def __init__(self, 
@@ -46,6 +48,7 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
         self.tracking_id=row_dict_I['tracking_id'];
         self.sample_name=row_dict_I['sample_name'];
         self.experiment_id=row_dict_I['experiment_id'];
+        #self.library_norm_method=row_dict_I['library_norm_method'];
 
     def __set__row__(self,
         experiment_id_I,
@@ -63,6 +66,7 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
         FPKM_conf_lo_I,
         FPKM_conf_hi_I,
         FPKM_status_I,
+        #library_norm_method_I,
         used__I,
         comment__I):
         self.experiment_id=experiment_id_I
@@ -80,6 +84,7 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
         self.FPKM_conf_lo=FPKM_conf_lo_I
         self.FPKM_conf_hi=FPKM_conf_hi_I
         self.FPKM_status=FPKM_status_I
+        #self.library_norm_method=library_norm_method_I
         self.used_=used__I
         self.comment_=comment__I
 
@@ -100,6 +105,7 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
                 'FPKM_conf_lo':self.FPKM_conf_lo,
                 'FPKM_conf_hi':self.FPKM_conf_hi,
                 'FPKM_status':self.FPKM_status,
+                #'library_norm_method':self.library_norm_method,
                 'used_':self.used_,
                 'comment_':self.comment_};
     

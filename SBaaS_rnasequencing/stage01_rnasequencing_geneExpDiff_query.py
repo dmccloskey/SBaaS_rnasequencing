@@ -121,6 +121,59 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
                 except SQLAlchemyError as e:
                     print(e);
             self.session.commit();
+    def getAggregateFunction_rows_dataStage01RNASequencingGeneExpDiff(self,
+                column_name_I = 'gene',
+                aggregate_function_I='count',
+                aggregate_label_I='count_1',
+                query_I={},
+                output_O='scalar',
+                dictColumn_I=None):
+        '''Query row count by analysis_id from data_stage01_rnasequencing_geneExpDiff
+        INPUT:
+        analysis_id_I = string
+        column_name_I = string
+        aggregate_function_I = name of the aggregate function to call on the column
+        output_O = string
+        dictColumn_I = string
+        OPTIONAL INPUT:
+        query_I = additional query blocks
+        OUTPUT:
+        data_O = output specified by output_O and dictColumn_I
+        '''
+
+        tables = ['data_stage01_rnasequencing_geneExpDiff'];
+        # get the listDict data
+        data_O = [];
+        query = {};
+        query['select'] = [
+            {"table_name":tables[0],
+             "column_name":column_name_I,
+             'aggregate_function':aggregate_function_I,
+             'label':aggregate_label_I,
+             }
+            ];
+        query['where'] = [
+            {"table_name":tables[0],
+            'column_name':'used_',
+            'value':'true',
+            'operator':'IS',
+            'connector':'AND'
+                },
+	    ];
+
+        #additional query blocks
+        for k,v in query_I.items():
+            if not k in query.keys():
+                query[k] = [];
+            for r in v:
+                query[k].append(r);
+        
+        data_O = self.get_rows_tables(
+            tables_I=tables,
+            query_I=query,
+            output_O=output_O,
+            dictColumn_I=dictColumn_I);
+        return data_O;
 
     # query data from data_stage01_rnasequencing_geneExpDiffFpkmTracking
     def get_rows_analysisID_dataStage01RNASequencingGeneExpDiffFpkmTracking(self,analysis_id_I):

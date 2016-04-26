@@ -25,7 +25,7 @@ class data_stage01_rnasequencing_genesFpkmTracking(Base):
 
     __table_args__ = (
         UniqueConstraint('experiment_id','sample_name','gene_id',
-                         'library_norm_method'
+                         #'library_norm_method'
                          ),
             )
     def __init__(self, 

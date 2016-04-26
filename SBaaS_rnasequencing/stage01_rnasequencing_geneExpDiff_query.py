@@ -7,6 +7,7 @@ from SBaaS_base.sbaas_base_query_select import sbaas_base_query_select
 from SBaaS_base.sbaas_base_query_delete import sbaas_base_query_delete
 
 from SBaaS_base.sbaas_template_query import sbaas_template_query
+
 #sbaas models
 from .stage01_rnasequencing_geneExpDiff_postgresql_models import *
 
@@ -28,30 +29,27 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
                     data_stage01_rnasequencing_geneExpDiff.sample_name_abbreviation_1.like(sample_name_abbreviation_1_I),
                     data_stage01_rnasequencing_geneExpDiff.sample_name_abbreviation_2.like(sample_name_abbreviation_2_I),
                     data_stage01_rnasequencing_geneExpDiff.used_).all();
-            data_O = [];
-            for d in data: 
-                data_dict = {'id':d.id,
-                #'analysis_id':d.analysis_id,
-                'experiment_id_1':d.experiment_id_1,
-                'experiment_id_2':d.experiment_id_2,
-                'sample_name_abbreviation_1':d.sample_name_abbreviation_1,
-                'sample_name_abbreviation_2':d.sample_name_abbreviation_2,
-                'test_id':d.test_id,
-                'gene_id':d.gene_id,
-                'gene':d.gene,
-                'sample_1':d.sample_1,
-                'sample_2':d.sample_2,
-                'status':d.status,
-                'value_1':d.value_1,
-                'value_2':d.value_2,
-                'fold_change_log2':d.fold_change_log2,
-                'test_stat':d.test_stat,
-                'p_value':d.p_value,
-                'q_value':d.q_value,
-                'significant':d.significant,
-                'used_':d.used_,
-                'comment_':d.comment_};
-                data_O.append(data_dict);
+            data_O = [d.__repr__dict__() for d in data];
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
+    def get_rows_experimentIDsAndSampleNameAbbreviationsAndFCAndQValue_dataStage01RNASequencingGeneExpDiff(
+        self,experiment_id_1_I,experiment_id_2_I,sample_name_abbreviation_1_I,sample_name_abbreviation_2_I,
+        fold_change_log2_threshold_I = 2, q_value_threshold_I = 0.05):
+        '''Query rows by experiment_ids 1 and 2, sample_name_abbreviations 1 and 2,
+        abs(fold_change_log2) threshold, q_value threshold'''
+        try:
+            data = self.session.query(data_stage01_rnasequencing_geneExpDiff).filter(
+                    data_stage01_rnasequencing_geneExpDiff.experiment_id_1.like(experiment_id_1_I),
+                    data_stage01_rnasequencing_geneExpDiff.experiment_id_2.like(experiment_id_2_I),
+                    data_stage01_rnasequencing_geneExpDiff.sample_name_abbreviation_1.like(sample_name_abbreviation_1_I),
+                    data_stage01_rnasequencing_geneExpDiff.sample_name_abbreviation_2.like(sample_name_abbreviation_2_I),
+                    or_(data_stage01_rnasequencing_geneExpDiff.fold_change_log2 >= fold_change_log2_threshold_I,
+                        data_stage01_rnasequencing_geneExpDiff.fold_change_log2 <= fold_change_log2_threshold_I,
+                        ),
+                    data_stage01_rnasequencing_geneExpDiff.q_value <= q_value_threshold_I,
+                    data_stage01_rnasequencing_geneExpDiff.used_).all();
+            data_O = [d.__repr__dict__() for d in data];
             return data_O;
         except SQLAlchemyError as e:
             print(e);

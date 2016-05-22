@@ -50,4 +50,24 @@ ged01 = stage01_rnasequencing_geneExpDiff_execute(session,engine,pg_settings.dat
 ged01.initialize_supportedTables();
 ged01.initialize_tables();
 
-ged01.export_dataStage01RNASequencingGeneExpDiff_count_js();
+#ged01.export_dataStage01RNASequencingGeneExpDiff_count_js();
+ged01.export_dataStage01RNASequencingGeneExpDiffFpkmTracking_js(
+    analysis_ids_I=['ALEsKOs01_0_evo04_0_evo04tpiA',
+                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo01',
+                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo02',
+                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo03',
+                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo04',
+                    'ALEsKOs01_0_11_evo04tpiAEvo01',
+                    'ALEsKOs01_0_11_evo04tpiAEvo02',
+                    'ALEsKOs01_0_11_evo04tpiAEvo03',
+                    'ALEsKOs01_0_11_evo04tpiAEvo04',],
+    gene_short_names_I=['aceE','aceF','lpd']
+    )
+#ged01.export_dataStage01RNASequencingGeneExpDiffFpkmTracking_js(
+#    analysis_ids_I=['ALEsKOs01_0_evo04_0_evo04ptsHIcrr',
+#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo01',
+#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo02',
+#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo03',
+#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo04',],
+#    gene_short_names_I=['lexA','recA','umuC','umuD','rulA']
+#    )

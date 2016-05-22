@@ -184,3 +184,117 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rows_analysisIDAndGeneShortNames_dataStage01RNASequencingGeneExpDiffFpkmTracking_v1(
+        self,analysis_id_I,gene_short_names_I=[]):
+        '''Query rows by analysis_id and gene_short_name
+        TODO: optimize
+        1. implement listDict version
+        2. implement = ANY('{}'::text[])'''
+        try:
+            data_O = [];
+            if gene_short_names_I:
+                data = self.session.query(data_stage01_rnasequencing_geneExpDiffFpkmTracking).filter(
+                        data_stage01_rnasequencing_geneExpDiffFpkmTracking.analysis_id.like(analysis_id_I),
+                        #data_stage01_rnasequencing_geneExpDiffFpkmTracking.gene_short_name.contains(gene_short_names_I),
+                        data_stage01_rnasequencing_geneExpDiffFpkmTracking.used_).all();
+                #data_O = [d.__repr__dict__() for d in data];
+                data_O = [d.__repr__dict__() for d in data if d.gene_short_name in gene_short_names_I];
+            else:
+                data_O = self.get_rows_analysisID_dataStage01RNASequencingGeneExpDiffFpkmTracking(analysis_id_I)
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
+    
+    def get_rows_analysisIDAndGeneShortNames_dataStage01RNASequencingGeneExpDiffFpkmTracking(self,
+                analysis_ids_I = [],
+                gene_short_names_I = [],
+                query_I={},
+                output_O='listDict',
+                dictColumn_I=None):
+        '''Query rows by analysis_ids and gene_short_names from data_stage01_rnasequencing_geneExpDiffFpkmTracking
+        INPUT:
+        analysis_ids_I = string
+        gene_short_names_I = list of gene_short_names,
+        output_O = string
+        dictColumn_I = string
+        OPTIONAL INPUT:
+        query_I = additional query blocks
+        OUTPUT:
+        data_O = output specified by output_O and dictColumn_I
+        '''
+        # get the listDict data
+        data_O = [];
+        tables = ['data_stage01_rnasequencing_geneExpDiffFpkmTracking'];
+
+        # make the query
+        query = {};
+        query['select'] = [{"table_name":tables[0]}];
+        gene_short_names_str = ','.join(gene_short_names_I);
+        gene_short_names_query = ("('{%s}'::text[])" %(gene_short_names_str))
+        analysis_ids_str = ','.join(analysis_ids_I);
+        analysis_ids_query = ("('{%s}'::text[])" %(analysis_ids_str))
+        query['where'] = [
+            {"table_name":tables[0],
+            'column_name':'used_',
+            'value':'true',
+            'operator':'IS',
+            'connector':'AND'
+                },
+            {"table_name":tables[0],
+            'column_name':'analysis_id',
+            'value':analysis_ids_query,
+            'operator':'=ANY',
+            'connector':'AND'
+                },
+            {"table_name":tables[0],
+            'column_name':'gene_short_name',
+            'value':gene_short_names_query,
+            'operator':'=ANY',
+            'connector':'AND'
+                },
+	    ];
+        query['order_by'] = [
+            {"table_name":tables[0],
+            'column_name':'analysis_id',
+            'order':'ASC',
+            },
+            {"table_name":tables[0],
+            'column_name':'experiment_id',
+            'order':'ASC',
+            },
+            {"table_name":tables[0],
+            'column_name':'sample_name_abbreviation',
+            'order':'ASC',
+            },
+            {"table_name":tables[0],
+            'column_name':'gene_short_name',
+            'order':'ASC',
+            },
+        ];
+
+        #additional blocks
+        for k,v in query_I.items():
+            if not k in query.keys():
+                query[k] = [];
+            for r in v:
+                query[k].append(r);
+        
+        data_O = self.get_rows_tables(
+            tables_I=tables,
+            query_I=query,
+            output_O=output_O,
+            dictColumn_I=dictColumn_I);
+        return data_O;
+
+    def get_rows_experimentIDsAndSampleNameAbbreviations_dataStage01RNASequencingGeneExpDiffFpkmTracking(
+        self,experiment_id_I,sample_name_abbreviation_I):
+        '''Query rows by experiment_id and sample_name_abbreviation'''
+        try:
+            data = self.session.query(data_stage01_rnasequencing_geneExpDiffFpkmTracking).filter(
+                    data_stage01_rnasequencing_geneExpDiffFpkmTracking.experiment_id.like(experiment_id_I),
+                    data_stage01_rnasequencing_geneExpDiffFpkmTracking.sample_name_abbreviation.like(sample_name_abbreviation_I),
+                    data_stage01_rnasequencing_geneExpDiffFpkmTracking.used_).all();
+            data_O = [d.__repr__dict__() for d in data];
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);

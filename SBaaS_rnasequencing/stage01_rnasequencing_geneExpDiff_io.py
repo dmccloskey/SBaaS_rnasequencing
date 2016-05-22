@@ -41,7 +41,10 @@ class stage01_rnasequencing_geneExpDiff_io(stage01_rnasequencing_geneExpDiff_que
         data.clear_data();
         
     def export_dataStage01RNASequencingGeneExpDiff_js(self,analysis_id_I,p_value_I=0.01,fold_change_log2_I=1.0,data_dir_I='tmp'):
-        '''Export data for a volcano plot'''
+        '''Export data differentially expressed genes as a Volcano Plot
+        INPUT:
+        OUTPUT:
+        '''
         
         # get the analysis information
         experiment_ids,sample_name_abbreviations = [],[];
@@ -224,6 +227,79 @@ class stage01_rnasequencing_geneExpDiff_io(stage01_rnasequencing_geneExpDiff_que
                 svgtileheader='Significant DE count',
                 tablefilters=None,
                 tableheaders=None
+                );
+
+        if data_dir_I=='tmp':
+            filename_str = self.settings['visualization_data'] + '/tmp/ddt_data.js'
+        elif data_dir_I=='data_json':
+            data_json_O = nsvgtable.get_allObjects_js();
+            return data_json_O;
+        with open(filename_str,'w') as file:
+            file.write(nsvgtable.get_allObjects());
+    def export_dataStage01RNASequencingGeneExpDiffFpkmTracking_js(
+        self,analysis_ids_I,gene_short_names_I=[],query_I={},data_dir_I='tmp'):
+        '''Export data as a bullet chart
+        INPUT:
+        OUTPUT:
+        '''
+        
+        data_O = [];
+        # get fpkm tracking data
+        data_O = self.get_rows_analysisIDAndGeneShortNames_dataStage01RNASequencingGeneExpDiffFpkmTracking(
+            analysis_ids_I,
+            gene_short_names_I,
+            query_I=query_I,
+            output_O='listDict',
+            dictColumn_I=None);
+
+        # make the data parameters
+        data1_keys = [
+            'analysis_id',
+            'experiment_id',
+            'sample_name_abbreviation',
+            #'gene_id',
+            'gene_short_name',
+                    ];
+        data1_nestkeys = ['gene_short_name'];
+        data1_keymap = {
+                'ydata':'FPKM',
+                'ydatamean':'FPKM',
+                'ydatalb':'FPKM_conf_lo',
+                'ydataub':'FPKM_conf_hi',
+                'xdata':'gene_short_name',
+                'serieslabel':'sample_name_abbreviation',
+                'featureslabel':'sample_name_abbreviation',
+                'tooltiplabel':'gene_short_name'};
+        
+        nsvgtable = ddt_container_filterMenuAndChart2dAndTable();
+        nsvgtable.make_filterMenuAndChart2dAndTable(
+                data_filtermenu=data_O,
+                data_filtermenu_keys=data1_keys,
+                data_filtermenu_nestkeys=data1_nestkeys,
+                data_filtermenu_keymap=data1_keymap,
+                data_svg_keys=None,
+                data_svg_nestkeys=None,
+                data_svg_keymap=None,
+                data_table_keys=None,
+                data_table_nestkeys=None,
+                data_table_keymap=None,
+                data_svg=None,
+                data_table=None,
+                svgtype='boxandwhiskersplot2d_01',
+                tabletype='responsivetable_01',
+                svgx1axislabel='',
+                svgy1axislabel='FPKM',
+                tablekeymap = [data1_keymap],
+                svgkeymap = [data1_keymap],
+                formtile2datamap=[0],
+                tabletile2datamap=[0],
+                svgtile2datamap=[0],
+                svgfilters=None,
+                svgtileheader='Cuffdiff FPKM',
+                tablefilters=None,
+                tableheaders=None,
+                svgparameters_I={"svgmargin":{ 'top': 50, 'right': 150, 'bottom': 50, 'left': 50 },
+                                "svgwidth":500,"svgheight":350,}
                 );
 
         if data_dir_I=='tmp':

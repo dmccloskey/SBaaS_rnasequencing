@@ -68,6 +68,10 @@ ged01.export_dataStage01RNASequencingGeneExpDiffFpkmTracking_js(
 #                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo01',
 #                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo02',
 #                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo03',
-#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo04',],
+#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo04',
+#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo01',
+#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo02',
+#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo03',
+#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo04',],
 #    gene_short_names_I=['lexA','recA','umuC','umuD','rulA']
 #    )

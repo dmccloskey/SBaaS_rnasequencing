@@ -224,11 +224,16 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
         '''
         # get the listDict data
         data_O = [];
-        tables = ['data_stage01_rnasequencing_geneExpDiffFpkmTracking'];
+        tables = ['data_stage01_rnasequencing_geneExpDiffFpkmTracking',
+                  #'data_stage01_rnasequencing_geneExpDiff'
+                  ];
 
         # make the query
         query = {};
-        query['select'] = [{"table_name":tables[0]}];
+        query['select'] = [
+            {"table_name":tables[0]},
+            #{"table_name":tables[1],'column_name':'significant'},
+            ];
         gene_short_names_str = ','.join(gene_short_names_I);
         gene_short_names_query = ("('{%s}'::text[])" %(gene_short_names_str))
         analysis_ids_str = ','.join(analysis_ids_I);

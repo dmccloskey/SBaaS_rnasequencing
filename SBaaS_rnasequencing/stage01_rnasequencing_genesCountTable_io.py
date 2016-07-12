@@ -1,38 +1,67 @@
 #system
 import json
 #sbaas
-from .stage01_rnasequencing_genesFpkmTracking_query import stage01_rnasequencing_genesFpkmTracking_query
+from .stage01_rnasequencing_genesCountTable_query import stage01_rnasequencing_genesCountTable_query
 from .stage01_rnasequencing_analysis_query import stage01_rnasequencing_analysis_query
 from SBaaS_base.sbaas_template_io import sbaas_template_io
 
 # Resources
 from io_utilities.base_importData import base_importData
 from io_utilities.base_exportData import base_exportData
-from sequencing_analysis.genes_fpkm_tracking import genes_fpkm_tracking
+from sequencing_analysis.genes_countFPKMattr_table import genes_countFPKMattr_table
 from ddt_python.ddt_container_filterMenuAndChart2dAndTable import ddt_container_filterMenuAndChart2dAndTable
 from ddt_python.ddt_container import ddt_container
 from listDict.listDict import listDict
 from math import log2
 
-class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkmTracking_query,
-                                                 stage01_rnasequencing_analysis_query,
-                                           sbaas_template_io):
+class stage01_rnasequencing_genesCountTable_io(
+    stage01_rnasequencing_genesCountTable_query,
+    stage01_rnasequencing_analysis_query,
+    sbaas_template_io):
 
-    def import_dataStage01RNASequencingGenesFpkmTracking_add(self,filename,experiment_id,sample_name):
+    def import_dataStage01RNASequencingGenesCountTable_add(
+        self,genes_count_table_dir,genes_fpkm_table_dir,
+        genes_attr_table_dir,
+        analysis_id_I,experiment_ids_I,samples_host_dirs_I,sample_names_I):
         '''table adds'''
-        genesfpkmtracking = genes_fpkm_tracking();
-        genesfpkmtracking.import_genesFpkmTracking(filename_I=filename,experiment_id_I = experiment_id,sample_name_I = sample_name);
-        self.add_dataStage01RNASequencingGenesFpkmTracking(genesfpkmtracking.genesFpkmTracking);
 
-    def import_dataStage01RNASequencingGenesFpkmTracking_update(self, filename):
+        countFPKMattr = genes_countFPKMattr_table();
+
+        countFPKMattr.import_countTable(
+            filename_I=genes_count_table_dir,);
+        countFPKMattr.import_fpkmTable(
+            filename_I=genes_fpkm_table_dir,);
+        countFPKMattr.import_attrTable(
+            filename_I=genes_attr_table_dir,);
+
+        #parse the filenames and samplenames
+        sna2sns_I={};
+        sna2experimentID_I={};
+        sample_names_lst = sample_names_I.split(',');
+        experiment_ids_lst = experiment_ids_I.split(',');
+        for cnt,sample_replicates in enumerate(samples_host_dirs_I.split('|')):
+            sna2sns_I[sample_names_lst[cnt]] = [];
+            sna2experimentID_I[sample_names_lst[cnt]] = experiment_ids_lst[cnt];
+            for sample in sample_replicates.split(','):
+                filename = sample.split('/')[-1].replace('.bam','').replace('.fastq','');
+                sna2sns_I[sample_names_lst[cnt]].append(filename);
+
+        genesCountTable = countFPKMattr.alignAndReformat_countFPKMattrTables(
+            analysis_id_I = analysis_id_I,
+            sna2experimentID_I = sna2experimentID_I,
+            sna2sns_I = sna2sns_I)
+
+        self.add_dataStage01RNASequencingGenesCountTable(genesCountTable);
+
+    def import_dataStage01RNASequencingGenesCountTable_update(self, filename):
         '''table adds'''
         data = base_importData();
         data.read_csv(filename);
         data.format_data();
-        self.update_dataStage01RNASequencingGenesFpkmTracking(data.data);
+        self.update_dataStage01RNASequencingGenesCountTable(data.data);
         data.clear_data();
 
-    def export_dataStage01RNASequencingGenesFpkmTracking_js(self,analysis_id_I,data_dir_I='tmp'):
+    def export_dataStage01RNASequencingGenesCountTable_js(self,analysis_id_I,data_dir_I='tmp'):
         '''Export data for a box and whiskers plot'''
         # get the analysis information
         experiment_ids,sample_names = [],[];
@@ -41,7 +70,7 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
         for sample_name_cnt,sample_name in enumerate(sample_names):
             # query fpkm data:
             fpkms = [];
-            fpkms = self.get_rows_experimentIDAndSampleName_dataStage01RNASequencingGenesFpkmTracking(experiment_ids[sample_name_cnt],sample_name);
+            fpkms = self.get_rows_experimentIDAndSampleName_dataStage01RNASequencingGenesCountTable(experiment_ids[sample_name_cnt],sample_name);
             data_O.extend(fpkms);
         # dump chart parameters to a js files
         data1_keys = ['experiment_id','sample_name','gene_short_name'
@@ -88,7 +117,7 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
             return data_json_O;
         with open(filename_str,'w') as file:
             file.write(ddtutilities.get_allObjects());
-    def export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js(self,analysis_id_I,log2normalization_I=True,data_dir_I='tmp'):
+    def export_dataStage01RNASequencingGenesCountTable_pairWisePlot_js(self,analysis_id_I,log2normalization_I=True,data_dir_I='tmp'):
         '''Export data for a pairwise scatter plot
         INPUT:
         analysis_id = String, analysis_id
@@ -103,7 +132,7 @@ class stage01_rnasequencing_genesFpkmTracking_io(stage01_rnasequencing_genesFpkm
         for sample_name_cnt,sample_name in enumerate(sample_names):
             # query fpkm data:
             fpkms = [];
-            fpkms = self.get_rows_experimentIDAndSampleName_dataStage01RNASequencingGenesFpkmTracking(experiment_ids[sample_name_cnt],sample_name);
+            fpkms = self.get_rows_experimentIDAndSampleName_dataStage01RNASequencingGenesCountTable(experiment_ids[sample_name_cnt],sample_name);
             if log2normalization_I:
                 for f in fpkms:
                     if f['FPKM'] == 0.0: f['FPKM'] = 0.0;

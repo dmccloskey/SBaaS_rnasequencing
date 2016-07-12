@@ -18,7 +18,8 @@ class stage01_rnasequencing_softwareParameters_query(sbaas_template_query,
         '''
         tables_supported = {'data_stage01_rnasequencing_bowtieParameters':data_stage01_rnasequencing_bowtieParameters,
                         'data_stage01_rnasequencing_cufflinksParameters':data_stage01_rnasequencing_cufflinksParameters,
-                        'data_stage01_rnasequencing_cuffdiffParameters':data_stage01_rnasequencing_cuffdiffParameters
+                        'data_stage01_rnasequencing_cuffdiffParameters':data_stage01_rnasequencing_cuffdiffParameters,
+                        'data_stage01_rnasequencing_cuffnormParameters':data_stage01_rnasequencing_cuffnormParameters,
                         };
         self.set_supportedTables(tables_supported);
 

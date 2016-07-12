@@ -1,0 +1,8 @@
+from copy import copy
+#sbaas
+from .stage01_rnasequencing_genesCountTable_io import stage01_rnasequencing_genesCountTable_io
+#sbaas models
+from .stage01_rnasequencing_genesCountTable_postgresql_models import *
+
+class stage01_rnasequencing_genesCountTable_execute(stage01_rnasequencing_genesCountTable_io):
+    pass;

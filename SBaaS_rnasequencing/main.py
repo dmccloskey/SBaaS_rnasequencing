@@ -42,36 +42,35 @@ fpkm01 = stage01_rnasequencing_genesFpkmTracking_execute(session,engine,pg_setti
 fpkm01.initialize_supportedTables();
 fpkm01.initialize_dataStage01_rnasequencing_genesFpkmTracking();
 
-#fpkm01.export_dataStage01RNASequencingGenesFpkmTracking_pairWisePlot_js('ALEsKOs01_0_evo04_11_evo04Evo01');
-
 #make the table
 from SBaaS_rnasequencing.stage01_rnasequencing_geneExpDiff_execute import stage01_rnasequencing_geneExpDiff_execute
 ged01 = stage01_rnasequencing_geneExpDiff_execute(session,engine,pg_settings.datadir_settings);
 ged01.initialize_supportedTables();
 ged01.initialize_tables();
 
-#ged01.export_dataStage01RNASequencingGeneExpDiff_count_js();
-ged01.export_dataStage01RNASequencingGeneExpDiffFpkmTracking_js(
-    analysis_ids_I=['ALEsKOs01_0_evo04_0_evo04tpiA',
-                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo01',
-                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo02',
-                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo03',
-                    'ALEsKOs01_0_evo04_11_evo04tpiAEvo04',
-                    'ALEsKOs01_0_11_evo04tpiAEvo01',
-                    'ALEsKOs01_0_11_evo04tpiAEvo02',
-                    'ALEsKOs01_0_11_evo04tpiAEvo03',
-                    'ALEsKOs01_0_11_evo04tpiAEvo04',],
-    gene_short_names_I=['aceE','aceF','lpd']
-    )
-#ged01.export_dataStage01RNASequencingGeneExpDiffFpkmTracking_js(
-#    analysis_ids_I=['ALEsKOs01_0_evo04_0_evo04ptsHIcrr',
-#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo01',
-#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo02',
-#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo03',
-#                    'ALEsKOs01_0_evo04_11_evo04ptsHIcrrEvo04',
-#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo01',
-#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo02',
-#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo03',
-#                    'ALEsKOs01_0_11_evo04ptsHIcrrEvo04',],
-#    gene_short_names_I=['lexA','recA','umuC','umuD','rulA']
-#    )
+#make the table
+from SBaaS_rnasequencing.stage01_rnasequencing_genesCountTable_execute import stage01_rnasequencing_genesCountTable_execute
+gct01 = stage01_rnasequencing_genesCountTable_execute(session,engine,pg_settings.datadir_settings);
+gct01.initialize_supportedTables();
+gct01.drop_tables();
+gct01.initialize_tables();
+
+from io_utilities.base_importData import base_importData
+from io_utilities.base_exportData import base_exportData
+
+# import the driver file
+iobase = base_importData();
+iobase.read_csv(pg_settings.datadir_settings['workspace_data']+'/_input/160712_RNASequencing_dataStage01GeneCountTable01.csv');
+fileList = iobase.data;
+# read in each data file
+for file in fileList:
+   print('importing genes.count/fpkm/attr_able for analysis ' + file['analysis_id']);
+   gct01.import_dataStage01RNASequencingGenesCountTable_add(
+       file['genes_count_table_dir'],
+       file['genes_fpkm_table_dir'],
+       file['genes_attr_table_dir'],
+       file['analysis_id'],
+       file['experiment_ids'],
+       file['samples_host_dirs'],
+       file['samples_names']);
+iobase.clear_data();

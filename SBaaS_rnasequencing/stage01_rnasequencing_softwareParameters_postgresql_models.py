@@ -301,3 +301,90 @@ class data_stage01_rnasequencing_cuffdiffParameters(Base):
     
     def __repr__json__(self):
         return json.dumps(self.__repr__dict__())
+
+class data_stage01_rnasequencing_cuffnormParameters(Base):
+    
+    __tablename__ = 'data_stage01_rnasequencing_cuffnormParameters'
+    id = Column(Integer, Sequence('data_stage01_rnasequencing_cuffnormParameters_id_seq'), primary_key=True)
+    analysis_id = Column(String(500))
+    sample_names = Column(Column(Text))
+    cuffdiff_version_number = Column(String(25))
+    library_type = Column(String(50), default='fr-firststrand')
+    threads = Column(String(100))
+    library_norm_method = Column(String(100), default='quartile')
+    samples_dirs = Column(Text)
+    indexes_dir = Column(String(500))
+    organism = Column(String(100))
+    output_dir = Column(String(500));
+    cuffdiff_options = Column(postgresql.JSON);
+    used_ = Column(Boolean);
+    comment_ = Column(Text);
+
+    __table_args__ = (
+        UniqueConstraint('analysis_id',
+                         'cuffdiff_version_number','library_type','library_norm_method'
+                         ),
+            )
+    def __init__(self, 
+                row_dict_I,
+                ):
+        self.analysis_id=row_dict_I['analysis_id'];
+        self.sample_names=row_dict_I['sample_names'];
+        self.cuffdiff_version_number=row_dict_I['cuffdiff_version_number'];
+        self.threads=row_dict_I['threads'];
+        self.library_norm_method=row_dict_I['library_norm_method'];
+        self.samples_dirs=row_dict_I['samples_dirs'];
+        self.used_=row_dict_I['used_'];
+        self.comment_=row_dict_I['comment_'];
+        self.library_type=row_dict_I['library_type'];
+        self.indexes_dir=row_dict_I['indexes_dir'];
+        self.organism=row_dict_I['organism'];
+        self.output_dir=row_dict_I['output_dir'];
+        self.cuffdiff_options=row_dict_I['cuffdiff_options'];
+
+    def __set__row__(self,
+        analysis_id_I,
+        sample_names_I,
+        cuffdiff_version_number_I,
+        library_type_I,
+        threads_I,
+        library_norm_method_I,
+        samples_dirs_I,
+        indexes_dir_I,
+        organism_I,
+        output_dir_I,
+        cuffdiff_options_I,
+        used__I,
+        comment__I):
+        self.analysis_id=analysis_id_I
+        self.sample_names=sample_names_I
+        self.cuffdiff_version_number=cuffdiff_version_number_I
+        self.library_type=library_type_I
+        self.threads=threads_I
+        self.library_norm_method=library_norm_method_I
+        self.samples_dirs_1=samples_dirs_I
+        self.indexes_dir=indexes_dir_I
+        self.organism=organism_I
+        self.output_dir=output_dir_I
+        self.cuffdiff_options=cuffdiff_options_I
+        self.used_=used__I
+        self.comment_=comment__I
+
+    def __repr__dict__(self):
+        return {'id':self.id,
+                'analysis_id':self.analysis_id,
+                'sample_names':self.sample_names,
+                'cuffdiff_version_number':self.cuffdiff_version_number,
+                'library_type':self.library_type,
+                'threads':self.threads,
+                'library_norm_method':self.library_norm_method,
+                'samples_dirs':self.samples_dirs,
+                'organism':self.organism,
+                'input_dir':self.input_dir,
+                'output_dir':self.output_dir,
+                'cuffdiff_options':self.cuffdiff_options,
+                'used_':self.used_,
+                'comment_':self.comment_};
+    
+    def __repr__json__(self):
+        return json.dumps(self.__repr__dict__())

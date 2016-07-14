@@ -39,6 +39,17 @@ class stage01_rnasequencing_genesCountTable_query(sbaas_template_query):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_rows_analysisIDAndValueUnits_dataStage01RNASequencingGenesCountTable(self,analysis_id_I,value_units_I):
+        '''Query rows by analysis_id and value_units'''
+        try:
+            data = self.session.query(data_stage01_rnasequencing_genesCountTable).filter(
+                    data_stage01_rnasequencing_genesCountTable.analysis_id.like(analysis_id_I),
+                    data_stage01_rnasequencing_genesCountTable.value_units.like(value_units_I),
+                    data_stage01_rnasequencing_genesCountTable.used_).all();
+            data_O = [d.__repr__dict__() for d in data];
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
     def add_dataStage01RNASequencingGenesCountTable(self, data_I):
         '''add rows of data_stage01_rnasequencing_fpkmTable'''
         if data_I:

@@ -1,7 +1,6 @@
 from SBaaS_base.postgresql_orm_base import *
 
 class data_stage01_rnasequencing_genesCountTable(Base):
-    #fpkm = fragments per kilobase of transcript
     __tablename__ = 'data_stage01_rnasequencing_genesCountTable'
     id = Column(Integer, Sequence('data_stage01_rnasequencing_genesCountTable_id_seq'), primary_key=True)
     analysis_id = Column(String(500))

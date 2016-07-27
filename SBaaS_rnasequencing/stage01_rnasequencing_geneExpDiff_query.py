@@ -53,6 +53,28 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
             return data_O;
         except SQLAlchemyError as e:
             print(e);
+    def get_genes_experimentIDsAndSampleNameAbbreviationsAndFCAndQValue_dataStage01RNASequencingGeneExpDiff(
+        self,experiment_id_1_I,experiment_id_2_I,sample_name_abbreviation_1_I,sample_name_abbreviation_2_I,
+        fold_change_log2_threshold_I = 2, q_value_threshold_I = 0.05):
+        '''Query rows by experiment_ids 1 and 2, sample_name_abbreviations 1 and 2,
+        abs(fold_change_log2) threshold, q_value threshold'''
+        try:
+            data = self.session.query(data_stage01_rnasequencing_geneExpDiff.gene).filter(
+                    data_stage01_rnasequencing_geneExpDiff.experiment_id_1.like(experiment_id_1_I),
+                    data_stage01_rnasequencing_geneExpDiff.experiment_id_2.like(experiment_id_2_I),
+                    data_stage01_rnasequencing_geneExpDiff.sample_name_abbreviation_1.like(sample_name_abbreviation_1_I),
+                    data_stage01_rnasequencing_geneExpDiff.sample_name_abbreviation_2.like(sample_name_abbreviation_2_I),
+                    or_(data_stage01_rnasequencing_geneExpDiff.fold_change_log2 >= fold_change_log2_threshold_I,
+                        data_stage01_rnasequencing_geneExpDiff.fold_change_log2 <= fold_change_log2_threshold_I,
+                        ),
+                    data_stage01_rnasequencing_geneExpDiff.q_value <= q_value_threshold_I,
+                    data_stage01_rnasequencing_geneExpDiff.used_).group_by(
+                    data_stage01_rnasequencing_geneExpDiff.gene).order_by(
+                    data_stage01_rnasequencing_geneExpDiff.gene.asc()).all();
+            data_O = [d.gene for d in data];
+            return data_O;
+        except SQLAlchemyError as e:
+            print(e);
     def add_dataStage01RNASequencingGeneExpDiff(self, data_I):
         '''add rows of data_stage01_rnasequencing_geneExpDiff'''
         if data_I:
@@ -172,6 +194,33 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
             output_O=output_O,
             dictColumn_I=dictColumn_I);
         return data_O;
+    # query data from data_stage01_rnasequencing_geneExpDiff and data_stage01_rnasequencing_analysis
+    def get_genes_analysisIDAndFCAndQValue_dataStage01RNASequencingGeneExpDiff(
+        self,analysis_id_I,
+        fold_change_log2_threshold_I = 2, q_value_threshold_I = 0.05):
+        '''Query genes by experiment_ids by analysis_id,
+        abs(fold_change_log2) threshold, q_value threshold'''
+        from .stage01_rnasequencing_analysis_query import stage01_rnasequencing_analysis_query
+        rnasequencing_analysis_query = stage01_rnasequencing_analysis_query(self.session,self.engine,self.settings);
+
+        #get the geneExpDiff data
+        experiment_ids,sample_name_abbreviations = [],[];
+        experiment_ids,sample_name_abbreviations = rnasequencing_analysis_query.get_experimentIDAndSampleNameAbbreviation_analysisID_dataStage01RNASequencingAnalysis(analysis_id_I);
+        genes_all = [];
+        for sample_name_abbreviation_cnt_1,sample_name_abbreviation_1 in enumerate(sample_name_abbreviations):
+            experiment_id_1 = experiment_ids[sample_name_abbreviation_cnt_1];
+            for sample_name_abbreviation_cnt_2,sample_name_abbreviation_2 in enumerate(sample_name_abbreviations):
+                if sample_name_abbreviation_cnt_1 != sample_name_abbreviation_cnt_2:
+                    experiment_id_2 = experiment_ids[sample_name_abbreviation_cnt_1];
+                    geneExpDiff_tmp = [];
+                    geneExpDiff_tmp = self.get_rows_experimentIDsAndSampleNameAbbreviationsAndFCAndQValue_dataStage01RNASequencingGeneExpDiff(
+                        experiment_id_1,experiment_id_2,sample_name_abbreviation_1,sample_name_abbreviation_2,
+                        fold_change_log2_threshold_I,q_value_threshold_I);
+                    # map the data
+                    genes_tmp = [fpkm['gene'] for fpkm in geneExpDiff_tmp];
+                    genes_all.extend(genes_tmp);
+        genes_O = list(set(genes_all));
+        return genes_O;
 
     # query data from data_stage01_rnasequencing_geneExpDiffFpkmTracking
     def get_rows_analysisID_dataStage01RNASequencingGeneExpDiffFpkmTracking(self,analysis_id_I):
@@ -203,8 +252,7 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
                 data_O = self.get_rows_analysisID_dataStage01RNASequencingGeneExpDiffFpkmTracking(analysis_id_I)
             return data_O;
         except SQLAlchemyError as e:
-            print(e);
-    
+            print(e);    
     def get_rows_analysisIDAndGeneShortNames_dataStage01RNASequencingGeneExpDiffFpkmTracking(self,
                 analysis_ids_I = [],
                 gene_short_names_I = [],
@@ -290,7 +338,6 @@ class stage01_rnasequencing_geneExpDiff_query(sbaas_template_query):
             output_O=output_O,
             dictColumn_I=dictColumn_I);
         return data_O;
-
     def get_rows_experimentIDsAndSampleNameAbbreviations_dataStage01RNASequencingGeneExpDiffFpkmTracking(
         self,experiment_id_I,sample_name_abbreviation_I):
         '''Query rows by experiment_id and sample_name_abbreviation'''

@@ -27,7 +27,11 @@ class data_stage01_rnasequencing_geneExpDiff(Base):
     comment_ = Column(Text);
 
     __table_args__ = (
-        UniqueConstraint('experiment_id_1','experiment_id_2','sample_name_abbreviation_1','sample_name_abbreviation_2','gene_id',
+        UniqueConstraint('experiment_id_1',
+                         'experiment_id_2',
+                         'sample_name_abbreviation_1',
+                         'sample_name_abbreviation_2',
+                         'gene_id',
                          #'library_norm_method'
                          ),
             )
